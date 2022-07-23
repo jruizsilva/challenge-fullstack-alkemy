@@ -1,0 +1,11 @@
+import { User } from "../models";
+
+const existsEmail = async (email = "") => {
+  // Verificar si el email existe
+  const existeEmail = await User.findOne({ email });
+  if (existeEmail) {
+    throw new Error(`El email: ${email}, ya está registrado`);
+  }
+};
+
+export { existsEmail };
