@@ -6,6 +6,7 @@ import sequelize from "./database/db";
 import authRoute from "./routes/auth.routes";
 import userRoute from "./routes/user.routes";
 import transactionsRoute from "./routes/transactions.routes";
+import walletRoute from "./routes/wallet.routes";
 import "./database/asociations";
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(helmet());
 app.use(userRoute);
 app.use(authRoute);
 app.use(transactionsRoute);
+app.use(walletRoute);
 
 sequelize
   .sync({ force: true })

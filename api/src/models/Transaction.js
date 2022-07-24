@@ -20,6 +20,11 @@ const Transaction = sequelize.define(
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    show: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      allowNull: false,
+    },
   },
   { timestamps: false }
 );
