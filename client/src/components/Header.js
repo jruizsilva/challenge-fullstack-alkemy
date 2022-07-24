@@ -1,19 +1,11 @@
 import React from "react";
 import {
-  IconButton,
-  Avatar,
   Box,
-  CloseButton,
   Flex,
   HStack,
   VStack,
-  Icon,
   useColorModeValue,
-  Link,
-  Drawer,
-  DrawerContent,
   Text,
-  useDisclosure,
   Menu,
   MenuButton,
   MenuDivider,
@@ -21,18 +13,17 @@ import {
   MenuList,
   Heading,
 } from "@chakra-ui/react";
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-  FiBell,
-  FiChevronDown,
-} from "react-icons/fi";
+import { FiChevronDown } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/reducers/user";
 
 function Header() {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <Flex
       px={[4, 8, 16]}
@@ -62,7 +53,7 @@ function Header() {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="md">Justina Clark</Text>
+                  <Text fontSize="md">{`${user.first_name} ${user.last_name}`}</Text>
                 </VStack>
                 <Box display={{ base: "flex" }}>
                   <FiChevronDown />
@@ -75,7 +66,7 @@ function Header() {
             >
               <MenuItem>Dashboard</MenuItem>
               <MenuDivider />
-              <MenuItem>Cerrar sesión</MenuItem>
+              <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

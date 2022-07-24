@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUserById, registerUser } from "../controllers/user.controllers";
+import { getUser, registerUser } from "../controllers/user.controllers";
 import { existsEmail } from "../helpers/existsEmail";
 import { validarCampos } from "../middlewares/validarCampos";
 import { validarJWT } from "../middlewares/validateJWT";
@@ -7,7 +7,7 @@ import { check } from "express-validator";
 
 const router = Router();
 
-router.get("/api/users/token", validarJWT, getUserById);
+router.get("/api/users/token", validarJWT, getUser);
 
 router.post(
   "/api/users",

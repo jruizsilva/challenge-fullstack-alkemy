@@ -14,7 +14,7 @@ const validarJWT = async (req, res, next) => {
     const user = await User.findOne({
       where: { id },
       attributes: {
-        exclude: ["password"],
+        exclude: ["password", "id"],
       },
     });
 
@@ -28,8 +28,8 @@ const validarJWT = async (req, res, next) => {
         msg: "Token no válido",
       });
     }
-
-    req.user = user;
+    const { active, ...rest } = user.toJSON();
+    req.user = rest;
     next();
   } catch (error) {
     console.log(error);

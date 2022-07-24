@@ -1,12 +1,12 @@
 import { User } from "../models";
 import bcryptjs from "bcryptjs";
 
-const getUserById = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     res.status(200).json(req.user);
   } catch (error) {
-    console.log("getUserById", error);
-    res.status(401).json("Something went wrong - getUserById");
+    console.log("getUser", error);
+    res.status(401).json("Something went wrong - getUser");
   }
 };
 
@@ -29,4 +29,4 @@ const registerUser = async (req, res) => {
   }
 };
 
-export { getUserById, registerUser };
+export { getUser, registerUser };
