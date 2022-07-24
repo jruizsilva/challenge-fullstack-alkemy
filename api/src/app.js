@@ -5,7 +5,8 @@ import helmet from "helmet";
 import sequelize from "./database/db";
 import authRoute from "./routes/auth.routes";
 import userRoute from "./routes/user.routes";
-import "./models";
+import transactionsRoute from "./routes/transactions.routes";
+import "./database/asociations";
 
 const app = express();
 // Settings
@@ -21,6 +22,7 @@ app.use(helmet());
 // Routes
 app.use(userRoute);
 app.use(authRoute);
+app.use(transactionsRoute);
 
 sequelize
   .sync({ force: true })

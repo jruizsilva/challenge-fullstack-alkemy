@@ -16,12 +16,13 @@ const registerUser = async (req, res) => {
   const salt = bcryptjs.genSaltSync();
 
   try {
-    await User.create({
+    const user = await User.create({
       first_name,
       last_name,
       email,
       password: bcryptjs.hashSync(password, salt),
     });
+    await user.createWallet();
     res.json({ msg: "Usuario creado correctamente" });
   } catch (error) {
     console.log("registerUser", error);

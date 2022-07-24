@@ -122,8 +122,8 @@ function ModalForm({ isOpen, onClose }) {
                 },
               })}
             >
-              <option value="egreso">Egreso</option>
-              <option value="ingreso">Ingreso</option>
+              <option value="egress">Egreso</option>
+              <option value="ingress">Ingreso</option>
             </Select>
             {errors.type && (
               <FormErrorMessage>{errors.type?.message}</FormErrorMessage>
