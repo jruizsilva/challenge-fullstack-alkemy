@@ -73,27 +73,39 @@ const updateTransaction = async (req, res) => {
   const transaction = await Transaction.findByPk(transactionId, {
     include: { model: Wallet },
   });
-  console.log(transaction.toJSON());
   const wallet = await Wallet.findByPk(transaction.walletId);
-  console.log(wallet.toJSON());
+
+  if (type === transaction.type) {
+    switch (transaction.type) {
+      case "egress":
+        await wallet.increment("balance", { by: transaction.amount });
+        await wallet.decrement("balance", { by: amount });
+        break;
+      case "ingress":
+        await wallet.decrement("balance", { by: transaction.amount });
+        await wallet.increment("balance", { by: amount });
+        break;
+    }
+  } else {
+    switch (type) {
+      case "egress":
+        await wallet.decrement("balance", { by: transaction.amount });
+        await wallet.decrement("balance", { by: amount });
+        break;
+      case "ingress":
+        await wallet.increment("balance", { by: transaction.amount });
+        await wallet.increment("balance", { by: amount });
+        break;
+    }
+  }
+
   const updatedTransaction = await transaction.update({
     name,
     amount,
     type,
     date,
   });
-  if (type === transaction.type) {
-    switch (transaction.type) {
-      case "egress":
-        wallet.increment("balance", { by: transaction.amount });
-        wallet.decrement("balance", { by: updatedTransaction.amount });
-        return;
-      case "ingress":
-        wallet.decrement("balance", { by: transaction.amount });
-        wallet.increment("balance", { by: updatedTransaction.amount });
-        return;
-    }
-  }
+
   res.json(updatedTransaction);
 };
 
