@@ -22,12 +22,12 @@ const createTransaction = async (req, res) => {
       await wallet.decrement("balance", {
         by: transaction.amount,
       });
-      return res.json({ msg: "Transacción creada correctamente" });
+      return res.json({ msg: "Registro agregado correctamente." });
     case "ingress":
       await wallet.increment("balance", {
         by: transaction.amount,
       });
-      return res.json({ msg: "Transacción creada correctamente" });
+      return res.json({ msg: "Registro agregado correctamente." });
   }
 };
 

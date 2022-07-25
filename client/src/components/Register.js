@@ -35,9 +35,7 @@ export default function Register() {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       const res = await axios.post("/api/users", data);
-      console.log(res.data);
       Swal.fire(res.data.msg, "Ya podes iniciar sesión", "success");
       navigate("/login");
       reset();

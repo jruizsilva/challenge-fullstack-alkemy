@@ -23,6 +23,7 @@ import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { setToken } from "../redux/reducers/user";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const {
@@ -36,12 +37,16 @@ export default function Login() {
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const res = await axios.post("/api/auth/login", data);
-      console.log(res.data);
       if (res.data) {
         dispatch(setToken(res.data));
+        sessionStorage.setItem("token", res.data.token);
+        Swal.fire(
+          "Credenciales válidas.",
+          "Has iniciado sesión correctamente",
+          "success"
+        );
         reset();
       }
     } catch (error) {

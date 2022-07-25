@@ -16,8 +16,14 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "@chakra-ui/react";
+import { login } from "../redux/reducers/user";
 
 function ModalForm({ isOpen, onClose }) {
+  const { user, token } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -26,15 +32,44 @@ function ModalForm({ isOpen, onClose }) {
   } = useForm({
     defaultValues: {
       name: "",
-      value: "",
+      amount: "",
       type: "",
       date: "",
     },
   });
+  const toast = useToast();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (data) => {
+    try {
+      const body = {
+        ...data,
+        userId: user.id,
+      };
+      const res = await axios.post("/api/transactions", body);
+      toast({
+        title: res.data.msg,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      axios
+        .get("/api/users/token", {
+          headers: {
+            "x-token": token,
+          },
+        })
+        .then((res) => {
+          dispatch(login({ user: res.data }));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      reset();
+    } catch (error) {
+      if (error.response.data.errors) {
+        console.log(error.response.data.errors);
+      }
+    }
   };
 
   const handleClose = () => {
@@ -59,7 +94,7 @@ function ModalForm({ isOpen, onClose }) {
                   message: "El nombre es requerido",
                 },
                 pattern: {
-                  value: /^[a-zA-Z]+$/,
+                  value: /^[a-z A-Z]+$/,
                   message:
                     "El nombre solo puede tener letras y no contener espacios al inicio o al final.",
                 },
@@ -83,13 +118,13 @@ function ModalForm({ isOpen, onClose }) {
             )}
           </FormControl>
 
-          <FormControl mt={4} isInvalid={errors.value}>
+          <FormControl mt={4} isInvalid={errors.ammout}>
             <FormLabel>Cantidad</FormLabel>
             <Input
               type="number"
               min={1}
               placeholder="Cantidad"
-              {...register("value", {
+              {...register("amount", {
                 required: {
                   value: true,
                   message: "La cantidad es requerida",

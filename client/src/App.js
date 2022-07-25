@@ -4,16 +4,17 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import Swal from "sweetalert2";
-import { login } from "./redux/reducers/user";
+import { login, setToken } from "./redux/reducers/user";
+import { Center, Spinner } from "@chakra-ui/react";
 
 function App() {
   const { user, token } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(token);
-    if (token) {
+    if (token && !user) {
+      setLoading(true);
       axios
         .get("/api/users/token", {
           headers: {
@@ -21,40 +22,47 @@ function App() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          setLoading(false);
           dispatch(login({ user: res.data }));
-          Swal.fire(
-            "Credenciales válidas.",
-            "Has iniciado sesión correctamente",
-            "success"
-          );
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
         });
+    } else {
+      const token = sessionStorage.getItem("token");
+      if (token) {
+        dispatch(setToken({ token }));
+      }
     }
-  }, [token]);
+  }, [user, token, dispatch]);
 
   return (
-    <div>
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" replace={true} />}
-        />
-        <Route
-          exact
-          path="/register"
-          element={!user ? <Register /> : <Navigate to="/" replace={true} />}
-        />
-        <Route
-          exact
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/" replace={true} />}
-        />
-      </Routes>
-    </div>
+    <>
+      {loading ? (
+        <Center h="100vh" bg="gray.50">
+          <Spinner size="xl" />
+        </Center>
+      ) : (
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={user ? <Home /> : <Navigate to="/login" replace={true} />}
+          />
+          <Route
+            exact
+            path="/register"
+            element={!user ? <Register /> : <Navigate to="/" replace={true} />}
+          />
+          <Route
+            exact
+            path="/login"
+            element={!user ? <Login /> : <Navigate to="/" replace={true} />}
+          />
+        </Routes>
+      )}
+    </>
   );
 }
 

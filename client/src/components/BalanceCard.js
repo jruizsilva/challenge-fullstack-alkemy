@@ -9,9 +9,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ModalForm } from "./index";
+import { useSelector } from "react-redux";
+
+let pesosARG = Intl.NumberFormat("es-AR", {
+  style: "currency",
+  currency: "ARS",
+  useGrouping: true,
+});
 
 function BalanceCard() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useSelector((state) => state.user);
 
   return (
     <>
@@ -27,7 +35,9 @@ function BalanceCard() {
           <StatLabel fontSize={"lg"} color="blue.500">
             Balance
           </StatLabel>
-          <StatNumber fontSize={"3xl"}>$0.00</StatNumber>
+          <StatNumber fontSize={"3xl"}>
+            {pesosARG.format(user.wallet.balance)}
+          </StatNumber>
           <StatHelpText>
             {new Date().toLocaleString("es-AR", { dateStyle: "short" })}
           </StatHelpText>

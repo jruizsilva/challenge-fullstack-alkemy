@@ -3,10 +3,10 @@ import { Header, Main } from "../components";
 
 function Home() {
   return (
-    <div>
+    <>
       <Header />
       <Main />
-    </div>
+    </>
   );
 }
 

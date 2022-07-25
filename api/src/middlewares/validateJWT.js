@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models";
+import { Transaction, User, Wallet } from "../models";
 
 const validarJWT = async (req, res, next) => {
   const token = req.header("x-token");
@@ -14,8 +14,9 @@ const validarJWT = async (req, res, next) => {
     const user = await User.findOne({
       where: { id },
       attributes: {
-        exclude: ["password", "id"],
+        exclude: ["password"],
       },
+      include: { model: Wallet, include: { model: Transaction } },
     });
 
     if (!user) {

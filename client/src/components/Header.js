@@ -22,6 +22,7 @@ function Header() {
   const { user } = useSelector((state) => state.user);
   const handleLogout = () => {
     dispatch(logout());
+    sessionStorage.removeItem("token");
   };
 
   return (
@@ -33,6 +34,7 @@ function Header() {
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
       justifyContent={{ base: "space-between" }}
+      as="header"
     >
       <Heading as={"h1"} size="lg">
         Mis finanzas
