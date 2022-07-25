@@ -6,3 +6,4 @@ export { default as Main } from "./Main";
 export { default as ModalForm } from "./ModalForm";
 export { default as MyTable } from "./MyTable";
 export { default as BalanceCard } from "./BalanceCard";
+export { default as GlobalFilters } from "./GlobalFilters";

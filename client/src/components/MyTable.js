@@ -30,10 +30,9 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-import SearchInput from "./SearchInput";
 import Swal from "sweetalert2";
-import ModalForm from "./ModalForm";
 import axios from "axios";
+import { GlobalFilters, ModalForm } from "./index";
 
 let pesosARG = Intl.NumberFormat("es-AR", {
   style: "currency",
@@ -182,7 +181,7 @@ function MyTable() {
   return (
     <>
       <TableContainer>
-        <SearchInput filter={globalFilter} setFilter={setGlobalFilter} />
+        <GlobalFilters filter={globalFilter} setFilter={setGlobalFilter} />
 
         <Table
           {...getTableProps()}
