@@ -23,7 +23,7 @@ import {
   EditIcon,
   DeleteIcon,
 } from "@chakra-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useTable,
   useSortBy,
@@ -33,6 +33,8 @@ import {
 import Swal from "sweetalert2";
 import axios from "axios";
 import { GlobalFilters, ModalForm } from "./index";
+import { setTransactions } from "../redux/reducers/transactions";
+import { setWallet } from "../redux/reducers/wallet";
 
 let pesosARG = Intl.NumberFormat("es-AR", {
   style: "currency",
@@ -89,6 +91,9 @@ const COLUMNS = [
 
 function MyTable() {
   const { transactions } = useSelector((state) => state.transaction);
+  const { wallet } = useSelector((state) => state.wallet);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [registerToEdit, setRegisterToEdit] = useState(null);
 
@@ -111,6 +116,18 @@ function MyTable() {
           const res = await axios.delete(`/api/transactions/${row.values.id}`);
           if (res.data.msg) {
             Swal.fire("Registro borrado!", res.data.msg, "success");
+            axios
+              .get(`/api/transactions/${wallet.id}`)
+              .then((res) => {
+                dispatch(setTransactions(res.data));
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            axios
+              .get(`/api/wallet/${user.wallet.id}`)
+              .then((res) => dispatch(setWallet(res.data)))
+              .catch((err) => console.log(err));
           }
         } catch (error) {
           console.log(error);
@@ -170,7 +187,6 @@ function MyTable() {
       columns,
       data,
     },
-
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -182,7 +198,6 @@ function MyTable() {
     <>
       <TableContainer>
         <GlobalFilters filter={globalFilter} setFilter={setGlobalFilter} />
-
         <Table
           {...getTableProps()}
           variant="striped"

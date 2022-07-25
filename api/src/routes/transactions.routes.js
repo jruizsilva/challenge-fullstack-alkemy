@@ -23,10 +23,8 @@ router.get(
       .isIn(["", "egress", "ingress"])
       .withMessage("Valores validos: egress, ingress"),
     check("category")
-      .isIn(["", "payment", "purchase", "services", "transactions"])
-      .withMessage(
-        "Valores validos: payment, purchase, services, transactions"
-      ),
+      .isIn(["", "payment", "purchase", "services", "transfer"])
+      .withMessage("Valores validos: payment, purchase, services, transfer"),
     check("walletId").custom(notExistsWallet),
     validarCampos,
   ],
@@ -43,10 +41,8 @@ router.post(
       .isIn(["egress", "ingress"])
       .withMessage("Valores validos: egress, ingress"),
     check("category")
-      .isIn(["payment", "purchase", "services", "transactions"])
-      .withMessage(
-        "Valores validos: payment, purchase, services, transactions"
-      ),
+      .isIn(["payment", "purchase", "services", "transfer"])
+      .withMessage("Valores validos: payment, purchase, services, transfer"),
     check("date").notEmpty().withMessage("La fecha es obligatoria"),
     check("userId").custom(notExistsUser),
     validarCampos,
@@ -78,10 +74,8 @@ router.put(
       .isIn(["", "egress", "ingress"])
       .withMessage("Valores validos: egress, ingress"),
     check("category")
-      .isIn(["payment", "purchase", "services", "transactions"])
-      .withMessage(
-        "Valores validos: payment, purchase, services, transactions"
-      ),
+      .isIn(["payment", "purchase", "services", "transfer"])
+      .withMessage("Valores validos: payment, purchase, services, transfer"),
     check("date").notEmpty().withMessage("La fecha es obligatoria"),
     check("transactionId").custom(notExistsTransaction),
     validarCampos,

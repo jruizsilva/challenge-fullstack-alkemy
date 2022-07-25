@@ -20,6 +20,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@chakra-ui/react";
 import { setTransactions } from "../redux/reducers/transactions";
+import { setWallet } from "../redux/reducers/wallet";
 
 function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
   const { user } = useSelector((state) => state.user);
@@ -79,6 +80,10 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
       });
       const response = await axios.get(`/api/transactions/${wallet.id}`);
       dispatch(setTransactions(response.data));
+      axios
+        .get(`/api/wallet/${user.wallet.id}`)
+        .then((res) => dispatch(setWallet(res.data)))
+        .catch((err) => console.log(err));
     } catch (error) {
       console.log(error);
       if (error.response.data.errors) {

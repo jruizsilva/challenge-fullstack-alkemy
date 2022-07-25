@@ -37,24 +37,17 @@ function GlobalFilters({ filter, setFilter }) {
   };
 
   useEffect(() => {
-    if (location.search) {
-      axios
-        .get(`/api/transactions/${wallet.id}${location.search}`)
-        .then((res) => dispatch(setTransactions(res.data)))
-        .catch((err) => console.log(err));
-    } else {
-      axios
-        .get(`/api/transactions/${wallet.id}`)
-        .then((res) => dispatch(setTransactions(res.data)))
-        .catch((err) => console.log(err));
-    }
+    axios
+      .get(`/api/transactions/${wallet.id}${location.search}`)
+      .then((res) => dispatch(setTransactions(res.data)))
+      .catch((err) => console.log(err));
   }, [location.search]);
 
   return (
     <>
       <HStack mb={2}>
         <Input
-          placeholder="Buscar registros..."
+          placeholder="Buscar por nombre"
           pl={2}
           variant="flushed"
           value={value || ""}
