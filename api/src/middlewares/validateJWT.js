@@ -18,7 +18,7 @@ const validarJWT = async (req, res, next) => {
       },
       include: {
         model: Wallet,
-        include: { model: Transaction, where: { show: true } },
+        where: { userId: id },
       },
     });
 

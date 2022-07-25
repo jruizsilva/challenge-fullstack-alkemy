@@ -19,7 +19,7 @@ let pesosARG = Intl.NumberFormat("es-AR", {
 
 function BalanceCard() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = useSelector((state) => state.user);
+  const { wallet } = useSelector((state) => state.wallet);
 
   return (
     <>
@@ -36,7 +36,7 @@ function BalanceCard() {
             Balance
           </StatLabel>
           <StatNumber fontSize={"3xl"}>
-            {pesosARG.format(user.wallet.balance)}
+            {pesosARG.format(wallet.balance)}
           </StatNumber>
           <StatHelpText>
             {new Date().toLocaleString("es-AR", { dateStyle: "short" })}

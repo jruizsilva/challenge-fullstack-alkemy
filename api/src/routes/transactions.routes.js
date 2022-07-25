@@ -19,6 +19,14 @@ router.get(
     check("walletId")
       .notEmpty()
       .withMessage("El id del usuario es obligatorio"),
+    check("type")
+      .isIn(["", "egress", "ingress"])
+      .withMessage("Valores validos: egress, ingress"),
+    check("category")
+      .isIn(["", "payment", "purchase", "services", "transactions"])
+      .withMessage(
+        "Valores validos: payment, purchase, services, transactions"
+      ),
     check("walletId").custom(notExistsWallet),
     validarCampos,
   ],
@@ -31,7 +39,14 @@ router.post(
     check("userId").notEmpty().withMessage("El id del usuario es obligatorio"),
     check("name").notEmpty().withMessage("El nombre es obligatorio"),
     check("amount").notEmpty().withMessage("amount es obligatorio"),
-    check("category").notEmpty().withMessage("La categoria es obligatoria"),
+    check("type")
+      .isIn(["egress", "ingress"])
+      .withMessage("Valores validos: egress, ingress"),
+    check("category")
+      .isIn(["payment", "purchase", "services", "transactions"])
+      .withMessage(
+        "Valores validos: payment, purchase, services, transactions"
+      ),
     check("date").notEmpty().withMessage("La fecha es obligatoria"),
     check("userId").custom(notExistsUser),
     validarCampos,
@@ -59,8 +74,14 @@ router.put(
       .withMessage("El id de la transacción es obligatorio"),
     check("name").notEmpty().withMessage("El nombre es obligatorio"),
     check("amount").notEmpty().withMessage("amount es obligatorio"),
-    check("type").notEmpty().withMessage("El tipo es obligatorio"),
-    check("category").notEmpty().withMessage("La categoria es obligatoria"),
+    check("type")
+      .isIn(["", "egress", "ingress"])
+      .withMessage("Valores validos: egress, ingress"),
+    check("category")
+      .isIn(["payment", "purchase", "services", "transactions"])
+      .withMessage(
+        "Valores validos: payment, purchase, services, transactions"
+      ),
     check("date").notEmpty().withMessage("La fecha es obligatoria"),
     check("transactionId").custom(notExistsTransaction),
     validarCampos,

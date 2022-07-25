@@ -34,9 +34,14 @@ const createTransaction = async (req, res) => {
 
 const getTransactionsByWalletId = async (req, res) => {
   const { walletId } = req.params;
+  const { category, type } = req.query;
+  let where = { show: true };
+  if (category) where.category = category;
+  if (type) where.type = type;
+
   const transactions = await Transaction.findAll({
     include: { model: Wallet, where: { id: walletId } },
-    where: { show: true },
+    where,
   });
   res.json(transactions);
 };

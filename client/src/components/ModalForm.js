@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Modal,
   ModalOverlay,
@@ -19,11 +19,13 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@chakra-ui/react";
-import { login } from "../redux/reducers/user";
+import { setTransactions } from "../redux/reducers/transactions";
 
 function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
-  const { user, token } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
+  const { wallet } = useSelector((state) => state.wallet);
   const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -75,18 +77,8 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
         duration: 5000,
         isClosable: true,
       });
-      axios
-        .get("/api/users/token", {
-          headers: {
-            "x-token": token,
-          },
-        })
-        .then((res) => {
-          dispatch(login({ user: res.data }));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const response = await axios.get(`/api/transactions/${wallet.id}`);
+      dispatch(setTransactions(response.data));
     } catch (error) {
       console.log(error);
       if (error.response.data.errors) {

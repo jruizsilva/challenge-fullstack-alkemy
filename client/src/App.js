@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { login, setToken } from "./redux/reducers/user";
 import { Center, Spinner } from "@chakra-ui/react";
+import { setWallet } from "./redux/reducers/wallet";
+import { setTransactions } from "./redux/reducers/transactions";
 
 function App() {
   const { user, token } = useSelector((state) => state.user);
+  const { wallet } = useSelector((state) => state.wallet);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -22,8 +25,9 @@ function App() {
           },
         })
         .then((res) => {
-          setLoading(false);
           dispatch(login({ user: res.data }));
+          dispatch(setWallet(res.data.wallet));
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -36,6 +40,19 @@ function App() {
       }
     }
   }, [user, token, dispatch]);
+
+  useEffect(() => {
+    if (wallet) {
+      axios
+        .get(`/api/transactions/${wallet.id}`)
+        .then((res) => {
+          dispatch(setTransactions(res.data));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [wallet]);
 
   return (
     <>

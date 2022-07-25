@@ -22,8 +22,8 @@ const registerUser = async (req, res) => {
       email,
       password: bcryptjs.hashSync(password, salt),
     });
-    await user.createWallet();
-    res.json({ msg: "Usuario creado correctamente" });
+    const wallet = await user.createWallet();
+    res.json({ wallet, msg: "Usuario creado correctamente" });
   } catch (error) {
     console.log("registerUser", error);
     res.status(400).json("Something went wrong - registerUser");

@@ -89,12 +89,12 @@ const COLUMNS = [
 ];
 
 function MyTable() {
-  const { user } = useSelector((state) => state.user);
+  const { transactions } = useSelector((state) => state.transaction);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [registerToEdit, setRegisterToEdit] = useState(null);
 
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => user.wallet.transactions, [user]);
+  const data = useMemo(() => transactions || [], [transactions]);
 
   const handleDelete = (row) => {
     console.log(row.values.id);
