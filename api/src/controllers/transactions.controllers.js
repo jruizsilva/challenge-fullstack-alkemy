@@ -1,7 +1,7 @@
 import { Transaction, Wallet, User } from "../models";
 
 const createTransaction = async (req, res) => {
-  const { userId, name, amount, type, date } = req.body;
+  const { userId, name, amount, type, category, date } = req.body;
 
   const wallet = await Wallet.findOne({
     include: {
@@ -14,6 +14,7 @@ const createTransaction = async (req, res) => {
     name,
     amount,
     type,
+    category,
     date,
   });
 
@@ -68,7 +69,7 @@ const deleteTransaction = async (req, res) => {
 
 const updateTransaction = async (req, res) => {
   const { transactionId } = req.params;
-  const { name, amount, type, date } = req.body;
+  const { name, amount, type, category, date } = req.body;
 
   const transaction = await Transaction.findByPk(transactionId, {
     include: { model: Wallet },
@@ -103,6 +104,7 @@ const updateTransaction = async (req, res) => {
     name,
     amount,
     type,
+    category,
     date,
   });
 

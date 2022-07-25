@@ -16,6 +16,10 @@ const Transaction = sequelize.define(
       type: DataTypes.ENUM(["egress", "ingress"]),
       allowNull: false,
     },
+    category: {
+      type: DataTypes.ENUM(["payment", "purchase", "services", "transfer"]),
+      allowNull: false,
+    },
     date: {
       type: DataTypes.DATEONLY,
       allowNull: false,

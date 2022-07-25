@@ -27,6 +27,7 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
   const {
     register,
     handleSubmit,
+    watch,
     reset,
     setValue,
     formState: { errors },
@@ -36,12 +37,14 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
           name: registerToEdit.name,
           amount: registerToEdit.amount,
           type: registerToEdit.type,
+          category: registerToEdit.category,
           date: registerToEdit.date,
         }
       : {
           name: "",
           amount: "",
           type: "",
+          category: "",
           date: "",
         },
   });
@@ -85,6 +88,7 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
           console.log(err);
         });
     } catch (error) {
+      console.log(error);
       if (error.response.data.errors) {
         console.log(error.response.data.errors);
       }
@@ -175,12 +179,51 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
                   message: "El tipo es requerido",
                 },
               })}
+              onChange={() => setValue("category", "")}
             >
               <option value="egress">Egreso</option>
               <option value="ingress">Ingreso</option>
             </Select>
             {errors.type && (
               <FormErrorMessage>{errors.type?.message}</FormErrorMessage>
+            )}
+          </FormControl>
+
+          <FormControl mt={4} isInvalid={errors.category}>
+            <FormLabel>Categoria</FormLabel>
+
+            {watch("type") === "ingress" && (
+              <Select
+                placeholder="Seleccione una categoria"
+                {...register("category", {
+                  required: {
+                    value: true,
+                    message: "La categoria es requerida",
+                  },
+                })}
+              >
+                <option value="payment">Cobros</option>
+                <option value="transfer">Transferencias</option>
+              </Select>
+            )}
+
+            {watch("type") === "egress" && (
+              <Select
+                placeholder="Seleccione una categoria"
+                {...register("category", {
+                  required: {
+                    value: true,
+                    message: "La categoria es requerida",
+                  },
+                })}
+              >
+                <option value="purchase">Compras</option>
+                <option value="services">Pago servicios</option>
+              </Select>
+            )}
+
+            {errors.category && (
+              <FormErrorMessage>{errors.category?.message}</FormErrorMessage>
             )}
           </FormControl>
 

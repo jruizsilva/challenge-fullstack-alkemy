@@ -76,6 +76,17 @@ const COLUMNS = [
     },
   },
   {
+    Header: "Categoria",
+    accessor: "category",
+    Cell: ({ value }) => {
+      if (value === "payment") return "Cobro";
+      if (value === "purchase") return "Compras";
+      if (value === "services") return "Pago servicios";
+      if (value === "transfer") return "Transferencia";
+      return value;
+    },
+  },
+  {
     Header: "Fecha",
     accessor: "date",
     Cell: ({ value }) => {
@@ -217,7 +228,9 @@ function MyTable() {
                 <Tr {...row.getRowProps()}>
                   {row.cells.map((cell) => {
                     return (
-                      <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                      <Td {...cell.getCellProps()} textAlign="center">
+                        {cell.render("Cell")}
+                      </Td>
                     );
                   })}
                 </Tr>
