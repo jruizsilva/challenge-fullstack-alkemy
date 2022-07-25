@@ -90,7 +90,9 @@ const COLUMNS = [
     Header: "Fecha",
     accessor: "date",
     Cell: ({ value }) => {
-      return format(new Date(value), "dd/MM/yyyy");
+      let date = new Date(value);
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+      return date.toLocaleDateString("es-AR");
     },
   },
 ];
