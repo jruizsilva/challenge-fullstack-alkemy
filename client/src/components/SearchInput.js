@@ -10,17 +10,19 @@ function SearchInput({ filter, setFilter }) {
   }, 300);
 
   return (
-    <Input
-      placeholder="Buscar registros..."
-      pl={2}
-      mb={2}
-      variant="flushed"
-      value={value || ""}
-      onChange={(e) => {
-        setValue(e.target.value);
-        onChange(e.target.value);
-      }}
-    />
+    <>
+      <Input
+        placeholder="Buscar registros..."
+        pl={2}
+        mb={2}
+        variant="flushed"
+        value={value || ""}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+      />
+    </>
   );
 }
 

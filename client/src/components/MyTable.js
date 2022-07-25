@@ -8,17 +8,9 @@ import {
   Td,
   TableContainer,
   Flex,
-  Tooltip,
   IconButton,
   Text,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Select,
   Center,
-  Box,
   HStack,
   Button,
   useDisclosure,
@@ -38,7 +30,6 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-import { format } from "date-fns";
 import SearchInput from "./SearchInput";
 import Swal from "sweetalert2";
 import ModalForm from "./ModalForm";
@@ -91,8 +82,8 @@ const COLUMNS = [
     accessor: "date",
     Cell: ({ value }) => {
       let date = new Date(value);
-      date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-      return date.toLocaleDateString("es-AR");
+      date.setDate(date.getDate() + 1);
+      return date.toLocaleDateString();
     },
   },
 ];
@@ -180,6 +171,7 @@ function MyTable() {
       columns,
       data,
     },
+
     useGlobalFilter,
     useSortBy,
     usePagination,

@@ -48,10 +48,6 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
           date: "",
         },
   });
-  useEffect(() => {
-    const subscription = watch((values) => console.log(values));
-    return () => subscription.unsubscribe();
-  }, [watch]);
 
   const toast = useToast();
 
