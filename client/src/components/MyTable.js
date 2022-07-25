@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Table,
   Thead,
@@ -19,12 +19,17 @@ import {
   Select,
   Center,
   Box,
+  HStack,
+  Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   ArrowRightIcon,
   ArrowLeftIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
+  EditIcon,
+  DeleteIcon,
 } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
 import {
@@ -35,6 +40,9 @@ import {
 } from "react-table";
 import { format } from "date-fns";
 import SearchInput from "./SearchInput";
+import Swal from "sweetalert2";
+import ModalForm from "./ModalForm";
+import axios from "axios";
 
 let pesosARG = Intl.NumberFormat("es-AR", {
   style: "currency",
@@ -78,9 +86,66 @@ const COLUMNS = [
 
 function MyTable() {
   const { user } = useSelector((state) => state.user);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [registerToEdit, setRegisterToEdit] = useState(null);
 
   const columns = useMemo(() => COLUMNS, []);
   const data = useMemo(() => user.wallet.transactions, [user]);
+
+  const handleDelete = (row) => {
+    console.log(row.values.id);
+    Swal.fire({
+      title: "¿Estas seguro?",
+      text: "No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar el registro",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await axios.delete(`/api/transactions/${row.values.id}`);
+          if (res.data.msg) {
+            Swal.fire("Registro borrado!", res.data.msg, "success");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  };
+
+  const handleEdit = (row) => {
+    setRegisterToEdit(row.values);
+    onOpen();
+  };
+
+  const tableHooks = (hooks) => {
+    hooks.visibleColumns.push((columns) => [
+      ...columns,
+      {
+        Cell: ({ row }) => (
+          <HStack>
+            <Button
+              colorScheme="telegram"
+              leftIcon={<EditIcon />}
+              onClick={() => handleEdit(row)}
+            >
+              Editar
+            </Button>
+            <Button
+              colorScheme="red"
+              leftIcon={<DeleteIcon />}
+              onClick={() => handleDelete(row)}
+            >
+              Eliminar
+            </Button>
+          </HStack>
+        ),
+      },
+    ]);
+  };
 
   const {
     getTableProps,
@@ -104,7 +169,8 @@ function MyTable() {
     },
     useGlobalFilter,
     useSortBy,
-    usePagination
+    usePagination,
+    tableHooks
   );
   const { pageIndex, globalFilter } = state;
 
@@ -124,12 +190,12 @@ function MyTable() {
           <Thead>
             {headerGroups.map((headerGroup) => (
               <Tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map((column, idx) => (
                   <Th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     bg="gray.600"
                     textColor="white"
-                    textAlign="center"
+                    textAlign={idx === 1 ? "left" : "center"}
                   >
                     {column.render("Header")}
                     <span>
@@ -160,7 +226,7 @@ function MyTable() {
           </Tbody>
         </Table>
       </TableContainer>
-      <Center p={2} w="100%" bg="gray.600" mt={"-32px"} maxW="568px">
+      <Center p={2} w="100%" mt={"-20px"}>
         <Flex justifyContent="space-between" alignItems="center" columnGap={5}>
           <Center>
             <IconButton
@@ -180,7 +246,7 @@ function MyTable() {
           </Center>
 
           <Center>
-            <Text flexShrink="0" textColor="white">
+            <Text flexShrink="0">
               Page{" "}
               <Text fontWeight="bold" as="span">
                 {pageIndex + 1}
@@ -210,6 +276,14 @@ function MyTable() {
           </Center>
         </Flex>
       </Center>
+      {registerToEdit && (
+        <ModalForm
+          isOpen={isOpen}
+          onClose={onClose}
+          registerToEdit={registerToEdit}
+          setRegisterToEdit={setRegisterToEdit}
+        />
+      )}
     </>
   );
 }

@@ -16,7 +16,10 @@ const validarJWT = async (req, res, next) => {
       attributes: {
         exclude: ["password"],
       },
-      include: { model: Wallet, include: { model: Transaction } },
+      include: {
+        model: Wallet,
+        include: { model: Transaction, where: { show: true } },
+      },
     });
 
     if (!user) {

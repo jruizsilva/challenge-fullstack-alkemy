@@ -99,14 +99,17 @@ const updateTransaction = async (req, res) => {
     }
   }
 
-  const updatedTransaction = await transaction.update({
+  const transactionUpdated = await transaction.update({
     name,
     amount,
     type,
     date,
   });
 
-  res.json(updatedTransaction);
+  res.json({
+    transactionUpdated,
+    msg: "Registro actualizado correctamente",
+  });
 };
 
 export {

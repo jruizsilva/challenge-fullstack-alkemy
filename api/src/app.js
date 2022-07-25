@@ -27,7 +27,7 @@ app.use(transactionsRoute);
 app.use(walletRoute);
 
 sequelize
-  .sync({ force: true })
+  .sync({ force: false })
   .then(() => {
     console.log("DB connected");
     app.listen(app.get("port"), () => {

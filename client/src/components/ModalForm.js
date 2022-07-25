@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -21,22 +21,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@chakra-ui/react";
 import { login } from "../redux/reducers/user";
 
-function ModalForm({ isOpen, onClose }) {
+function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
   const { user, token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      name: "",
-      amount: "",
-      type: "",
-      date: "",
-    },
+    defaultValues: registerToEdit
+      ? {
+          name: registerToEdit.name,
+          amount: registerToEdit.amount,
+          type: registerToEdit.type,
+          date: registerToEdit.date,
+        }
+      : {
+          name: "",
+          amount: "",
+          type: "",
+          date: "",
+        },
   });
+
   const toast = useToast();
 
   const onSubmit = async (data) => {
@@ -45,9 +54,20 @@ function ModalForm({ isOpen, onClose }) {
         ...data,
         userId: user.id,
       };
-      const res = await axios.post("/api/transactions", body);
+      let res;
+      if (registerToEdit) {
+        res = await axios.put(`/api/transactions/${registerToEdit.id}`, body);
+        setValue("name", res.data.transactionUpdated.name);
+        setValue("amount", res.data.transactionUpdated.amount);
+        setValue("type", res.data.transactionUpdated.type);
+        setValue("date", res.data.transactionUpdated.date);
+      } else {
+        res = await axios.post("/api/transactions", body);
+        reset();
+      }
       toast({
         title: res.data.msg,
+        position: "top",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -64,7 +84,6 @@ function ModalForm({ isOpen, onClose }) {
         .catch((err) => {
           console.log(err);
         });
-      reset();
     } catch (error) {
       if (error.response.data.errors) {
         console.log(error.response.data.errors);
@@ -73,15 +92,18 @@ function ModalForm({ isOpen, onClose }) {
   };
 
   const handleClose = () => {
+    if (setRegisterToEdit) setRegisterToEdit(null);
     reset();
     onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
-        <ModalHeader>Agregar registro</ModalHeader>
+        <ModalHeader>
+          {registerToEdit ? "Editar registro" : "Agregar registro"}
+        </ModalHeader>
         <ModalCloseButton onClick={handleClose} />
         <ModalBody pb={6}>
           <FormControl isInvalid={errors.name}>
@@ -94,9 +116,8 @@ function ModalForm({ isOpen, onClose }) {
                   message: "El nombre es requerido",
                 },
                 pattern: {
-                  value: /^[a-z A-Z]+$/,
-                  message:
-                    "El nombre solo puede tener letras y no contener espacios al inicio o al final.",
+                  value: /^[A-Za-z0-9]+[A-Za-z0-9\s]+[A-Za-z0-9]+$/,
+                  message: "No debe haber espacio al inicio o al final",
                 },
                 minLength: {
                   value: 2,
@@ -110,7 +131,7 @@ function ModalForm({ isOpen, onClose }) {
             />
             {!errors.name && (
               <FormHelperText>
-                El nombre solo puede tener letras.
+                El nombre solo puede tener letras, números y espacios.
               </FormHelperText>
             )}
             {errors.name && (
@@ -118,11 +139,9 @@ function ModalForm({ isOpen, onClose }) {
             )}
           </FormControl>
 
-          <FormControl mt={4} isInvalid={errors.ammout}>
+          <FormControl mt={4} isInvalid={errors.amount}>
             <FormLabel>Cantidad</FormLabel>
             <Input
-              type="number"
-              min={1}
               placeholder="Cantidad"
               {...register("amount", {
                 required: {
@@ -135,14 +154,14 @@ function ModalForm({ isOpen, onClose }) {
                 },
               })}
             />
-            {!errors.value && (
+            {!errors.amount && (
               <FormHelperText>
                 La cantidad debe ser un valor númerico mayor a 0.
               </FormHelperText>
             )}
 
-            {errors.value && (
-              <FormErrorMessage>{errors.value?.message}</FormErrorMessage>
+            {errors.amount && (
+              <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
             )}
           </FormControl>
 
@@ -185,7 +204,7 @@ function ModalForm({ isOpen, onClose }) {
 
         <ModalFooter>
           <Button type="submit" colorScheme="blue" mr={3}>
-            Save
+            {registerToEdit ? "Actualizar registro" : "Agregar registro"}
           </Button>
           <Button onClick={handleClose}>Cancel</Button>
         </ModalFooter>

@@ -8,7 +8,8 @@ function Main() {
     <Box
       px={[4, 8, 16]}
       pt={8}
-      h="90vh"
+      pb={4}
+      minH="90vh"
       bg={useColorModeValue("gray.50", "gray.800")}
       as="main"
     >

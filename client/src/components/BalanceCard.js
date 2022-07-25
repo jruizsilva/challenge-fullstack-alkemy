@@ -43,10 +43,10 @@ function BalanceCard() {
           </StatHelpText>
         </Stat>
         <Link color="blue.400" href="#" onClick={onOpen}>
-          Actualizar
+          Agregar
         </Link>
       </Box>
-      <ModalForm isOpen={isOpen} onClose={onClose} />
+      {isOpen && <ModalForm isOpen={isOpen} onClose={onClose} />}
     </>
   );
 }
