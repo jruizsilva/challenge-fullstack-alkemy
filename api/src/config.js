@@ -20,9 +20,9 @@ module.exports = {
     database: LOCAL_DB_DATABASE || "database",
   },
   deploy: {
-    username: DEPLOY_DB_USERNAME || "postgres",
-    password: DEPLOY_DB_PASSWORD || "admin",
-    host: DEPLOY_DB_HOST || "localhost",
-    database: DEPLOY_DB_DATABASE || "database",
+    username: DEPLOY_DB_USERNAME,
+    password: DEPLOY_DB_PASSWORD,
+    host: DEPLOY_DB_HOST,
+    database: DEPLOY_DB_DATABASE,
   },
 };

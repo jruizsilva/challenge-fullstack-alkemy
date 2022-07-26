@@ -7,7 +7,7 @@ import {
 } from "../controllers/transactions.controllers";
 import { check } from "express-validator";
 import { validarCampos } from "../middlewares/validarCampos";
-import { notExistsUser } from "../helpers/notexistsUser";
+import { notExistsUser } from "../helpers/notExistsUser";
 import { notExistsWallet } from "../helpers/notExistsWallet";
 import { notExistsTransaction } from "../helpers/notExistsTransaction";
 
