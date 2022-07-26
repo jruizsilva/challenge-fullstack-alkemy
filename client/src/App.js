@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { login, setToken } from "./redux/reducers/user";
 import { Center, Spinner } from "@chakra-ui/react";
+import NotFound from "./components/NotFound/NotFound";
 
 function App() {
   const { user, token } = useSelector((state) => state.user);
@@ -60,6 +61,7 @@ function App() {
             path="/login"
             element={!user ? <Login /> : <Navigate to="/" replace={true} />}
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       )}
     </>

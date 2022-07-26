@@ -41,7 +41,7 @@ function GlobalFilters({ filter, setFilter }) {
       .get(`/api/transactions/${wallet.id}${location.search}`)
       .then((res) => dispatch(setTransactions(res.data)))
       .catch((err) => console.log(err));
-  }, [location.search]);
+  }, [location.search, dispatch, wallet.id]);
 
   return (
     <>

@@ -18,7 +18,7 @@ function Home() {
         .then((res) => dispatch(setWallet(res.data)))
         .catch((err) => console.log(err));
     }
-  }, [user]);
+  }, [dispatch, wallet, user]);
 
   useEffect(() => {
     if (wallet) {
@@ -31,7 +31,7 @@ function Home() {
           console.log(error);
         });
     }
-  }, [wallet]);
+  }, [dispatch, wallet]);
 
   return (
     <>
