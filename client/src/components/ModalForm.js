@@ -68,6 +68,7 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
         setValue("type", res.data.transactionUpdated.type);
         setValue("date", res.data.transactionUpdated.date);
       } else {
+        console.log(body);
         res = await axios.post("/api/transactions", body);
         reset();
       }
@@ -149,10 +150,12 @@ function ModalForm({ isOpen, onClose, registerToEdit, setRegisterToEdit }) {
                   value: true,
                   message: "La cantidad es requerida",
                 },
-                pattern: {
-                  value: /^[0-9]+/,
+                min: {
+                  value: 1,
                   message: "Debe ser un valor númerico mayor a 0",
                 },
+                validate: (value) =>
+                  !isNaN(value) || "En número ingresado no es válido",
               })}
             />
             {!errors.amount && (
